@@ -1,8 +1,9 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
-from PySide6.QtGui import QShortcut, QKeySequence
+from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt
+from PySide6.QtCore import QFile
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -22,19 +23,15 @@ class MyWindow(QMainWindow):
             sys.exit(-1)
 
         # ショートカット設定
-        self.shortcut = QShortcut(QKeySequence("Meta+P"), self)
+        self.shortcut = QShortcut(QKeySequence("Ctrl+P"), self)
         self.shortcut.activated.connect(self.print_window_geometry)
 
         # デバッグログ
-        print("Debug: Shortcut Command+P has been set up.")
+        print("Debug: Shortcut Ctrl+P has been set up.")
 
     def keyPressEvent(self, event):
         """デバッグ用：キー入力を監視"""
-        if event.modifiers() == Qt.MetaModifier and event.key() == Qt.Key_P:
-            print("Debug: Command+P detected via keyPressEvent.")
-            self.print_window_geometry()
-        else:
-            print(f"Debug: Key pressed: {event.text()} (Key code: {event.key()})")
+        print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
         super().keyPressEvent(event)
 
     def get_window_geometry(self):
@@ -50,6 +47,7 @@ class MyWindow(QMainWindow):
         position, size = self.get_window_geometry()
         print(f"Window Position: x={position.x()}, y={position.y()}")
         print(f"Window Size: width={size.width()}, height={size.height()}")
+
 
 if __name__ == "__main__":
     print("Debug: QApplication instance is about to be created.")  # デバッグログ
