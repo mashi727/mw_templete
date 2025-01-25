@@ -4,6 +4,7 @@ from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt
 
+
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -14,25 +15,31 @@ class MyWindow(QMainWindow):
         if not ui_file.open(QFile.ReadOnly):
             print(f"Cannot open UI file: {ui_file.errorString()}")
             sys.exit(-1)
-        self.ui = loader.load(ui_file, self)
+        self.ui = loader.load(ui_file)
         ui_file.close()
 
         if not self.ui:
             print("Failed to load UI file.")
             sys.exit(-1)
 
+        # ロードしたUIをウィンドウの中央に設定
+        self.setCentralWidget(self.ui)
+
         # ショートカット設定
         self.shortcut = QShortcut(QKeySequence("Ctrl+P"), self)
         self.shortcut.activated.connect(self.print_window_geometry)
-        print("Debug: Shortcut Ctrl+P has been set up.")  # デバッグログ
+
+        # デバッグログ
+        print("Debug: Shortcut Ctrl+P has been set up.")
 
     def keyPressEvent(self, event):
         """キー入力を監視してデバッグログを出力"""
-        if event.type() == event.KeyPress:
-            print(f"Debug: Key pressed - Key: {event.key()}, Text: {event.text()}")
+        print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
+
         if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_P:
-            print("Debug: Ctrl+P detected.")  # Ctrl+Pの処理
-            self.print_window_geometry()
+            print("Debug: Ctrl+P detected.")
+            self.print_window_geometry()  # Ctrl+Pが押された場合の処理
+
         super().keyPressEvent(event)
 
     def get_window_geometry(self):
@@ -49,6 +56,7 @@ class MyWindow(QMainWindow):
         print(f"Window Position: x={position.x()}, y={position.y()}")
         print(f"Window Size: width={size.width()}, height={size.height()}")
 
+
 if __name__ == "__main__":
     print("Debug: QApplication instance is about to be created.")  # デバッグログ
     app = QApplication(sys.argv)
@@ -56,7 +64,7 @@ if __name__ == "__main__":
 
     window = MyWindow()
     print("Debug: MyWindow instance created.")  # デバッグログ
-    window.ui.show()  # UI を表示
+    window.show()  # UI を表示
     print("Debug: Window is now visible.")  # デバッグログ
 
     sys.exit(app.exec())
