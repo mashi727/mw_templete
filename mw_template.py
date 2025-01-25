@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt
@@ -10,7 +10,7 @@ class MyWindow(QMainWindow):
 
         # QUiLoader を使用して UI ファイルをロード
         loader = QUiLoader()
-        ui_file = QFile("test_ui.ui")
+        ui_file = QFile("test_ui.ui")  # UIファイルの名前が正しいことを確認
         if not ui_file.open(QFile.ReadOnly):
             print(f"Cannot open UI file: {ui_file.errorString()}")
             sys.exit(-1)
@@ -21,7 +21,7 @@ class MyWindow(QMainWindow):
             print("Failed to load UI file.")
             sys.exit(-1)
 
-        # ウィンドウ全体にUIを適用
+        # UIを中央ウィジェットとして設定
         self.setCentralWidget(self.ui)
 
         # 初期サイズをUIのサイズに合わせる
@@ -29,26 +29,28 @@ class MyWindow(QMainWindow):
         self.setMinimumSize(self.ui.minimumSize())
         self.setMaximumSize(self.ui.maximumSize())
 
+        # UI内のボタンにアクセス
+        self.setup_buttons()
+
         # ショートカット設定
         self.shortcut = QShortcut(QKeySequence("Ctrl+P"), self)
         self.shortcut.activated.connect(self.print_window_geometry)
-
-        # ボタンに接続
-        self.setup_buttons()
 
         # デバッグログ
         print("Debug: Shortcut Ctrl+P has been set up.")
 
     def setup_buttons(self):
-        """UIのボタンにシグナルを接続"""
-        if hasattr(self.ui, 'pushButton'):
-            self.ui.pushButton.clicked.connect(self.on_button_clicked)
-            print("Debug: Button pushButton is connected.")
+        """UI内のボタン設定"""
+        # UI内の pushButton を取得してクリックイベントを接続
+        self.button = self.ui.findChild(QPushButton, "pushButton")
+        if self.button:
+            self.button.clicked.connect(self.on_button_clicked)
+            print("Debug: Button found and connected.")
         else:
-            print("Debug: No pushButton found in the UI.")
+            print("Debug: Button not found in the UI file.")
 
     def on_button_clicked(self):
-        """ボタンがクリックされたときの処理"""
+        """ボタンクリック時の処理"""
         print("Debug: Button clicked!")
 
     def keyPressEvent(self, event):
