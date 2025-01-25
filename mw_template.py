@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
-from PySide6.QtCore import Qt, QPoint, QSize
+from PySide6.QtGui import QShortcut, QKeySequence
 from test_ui import Ui_MainWindow  # uic で生成された Python ファイルをインポート
 
 class MyWindow(QMainWindow):
@@ -11,17 +11,17 @@ class MyWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # ショートカット設定（変更）
+        self.shortcut = QShortcut(QKeySequence("Ctrl+Shift+P"), self)
+        self.shortcut.activated.connect(self.print_window_geometry)
+
         # デバッグログ
-        print("Debug: MyWindow instance created.")
+        print("Debug: Shortcut Ctrl+Shift+P has been set up.")
 
     def keyPressEvent(self, event):
-        """キーボード入力を処理する"""
-        if event.modifiers() == Qt.MetaModifier and event.key() == Qt.Key_P:
-            # Command+P が押された場合
-            self.print_window_geometry()
-        else:
-            # 他のキーはデフォルトの動作に戻す
-            super().keyPressEvent(event)
+        """デバッグ用：キー入力を監視"""
+        print(f"Debug: Key pressed: {event.text()}")  # 押されたキーをログに出力
+        super().keyPressEvent(event)
 
     def get_window_geometry(self):
         """ウィンドウの現在の位置とサイズを取得する関数"""
@@ -38,9 +38,13 @@ class MyWindow(QMainWindow):
         print(f"Window Size: width={size.width()}, height={size.height()}")
 
 if __name__ == "__main__":
+    print("Debug: QApplication instance is about to be created.")  # デバッグログ
     app = QApplication(sys.argv)
+    print("Debug: QApplication instance created.")  # デバッグログ
+
     window = MyWindow()
     print("Debug: MyWindow instance created.")  # デバッグログ
     window.show()  # UI を表示
     print("Debug: Window is now visible.")  # デバッグログ
+
     sys.exit(app.exec())
