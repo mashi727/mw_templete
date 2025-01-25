@@ -33,8 +33,23 @@ class MyWindow(QMainWindow):
         self.shortcut = QShortcut(QKeySequence("Ctrl+P"), self)
         self.shortcut.activated.connect(self.print_window_geometry)
 
+        # ボタンに接続
+        self.setup_buttons()
+
         # デバッグログ
         print("Debug: Shortcut Ctrl+P has been set up.")
+
+    def setup_buttons(self):
+        """UIのボタンにシグナルを接続"""
+        if hasattr(self.ui, 'pushButton'):
+            self.ui.pushButton.clicked.connect(self.on_button_clicked)
+            print("Debug: Button pushButton is connected.")
+        else:
+            print("Debug: No pushButton found in the UI.")
+
+    def on_button_clicked(self):
+        """ボタンがクリックされたときの処理"""
+        print("Debug: Button clicked!")
 
     def keyPressEvent(self, event):
         """キー入力を監視してデバッグログを出力"""
