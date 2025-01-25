@@ -24,16 +24,15 @@ class MyWindow(QMainWindow):
         # ショートカット設定
         self.shortcut = QShortcut(QKeySequence("Ctrl+P"), self)
         self.shortcut.activated.connect(self.print_window_geometry)
-
-        # デバッグログ
-        print("Debug: Shortcut Ctrl+P has been set up.")
+        print("Debug: Shortcut Ctrl+P has been set up.")  # デバッグログ
 
     def keyPressEvent(self, event):
         """キー入力を監視してデバッグログを出力"""
-        print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
+        if event.type() == event.KeyPress:
+            print(f"Debug: Key pressed - Key: {event.key()}, Text: {event.text()}")
         if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_P:
-            self.print_window_geometry()  # Ctrl+Pが押された場合の処理
-            print("Debug: Ctrl+P detected.")
+            print("Debug: Ctrl+P detected.")  # Ctrl+Pの処理
+            self.print_window_geometry()
         super().keyPressEvent(event)
 
     def get_window_geometry(self):
