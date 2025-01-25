@@ -19,14 +19,14 @@ class MyWindow(QMainWindow):
         self.ui = loader.load(ui_file, self)
         ui_file.close()
 
-        # Command-P ショートカットを設定 (macOS 用に Meta+P に変更)
-        self.shortcut = QShortcut(QKeySequence("Meta+P"), self)
+        # Command-P ショートカットを設定
+        self.shortcut = QShortcut(QKeySequence("Command+P"), self.ui)  # self.ui にショートカットを設定
         self.shortcut.activated.connect(self.print_window_geometry)
 
     def get_window_geometry(self):
         """ウィンドウの現在の位置とサイズを取得する関数"""
-        position = self.pos()  # ウィンドウの位置 (QPoint)
-        size = self.size()     # ウィンドウのサイズ (QSize)
+        position = self.geometry().topLeft()  # ウィンドウの位置 (QPoint)
+        size = self.geometry().size()         # ウィンドウのサイズ (QSize)
         return position, size
 
     def print_window_geometry(self):
