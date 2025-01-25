@@ -2,8 +2,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
-
+from PySide6.QtCore import QFile, Qt
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -30,8 +29,12 @@ class MyWindow(QMainWindow):
         print("Debug: Shortcut Ctrl+P has been set up.")
 
     def keyPressEvent(self, event):
-        """デバッグ用：キー入力を監視"""
-        print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
+        """キー入力を監視してデバッグログを出力"""
+        if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_P:
+            self.print_window_geometry()  # Ctrl+Pが押された場合の処理
+            print("Debug: Ctrl+P detected.")
+        else:
+            print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
         super().keyPressEvent(event)
 
     def get_window_geometry(self):
@@ -47,7 +50,6 @@ class MyWindow(QMainWindow):
         position, size = self.get_window_geometry()
         print(f"Window Position: x={position.x()}, y={position.y()}")
         print(f"Window Size: width={size.width()}, height={size.height()}")
-
 
 if __name__ == "__main__":
     print("Debug: QApplication instance is about to be created.")  # デバッグログ
