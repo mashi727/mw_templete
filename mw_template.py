@@ -30,11 +30,10 @@ class MyWindow(QMainWindow):
 
     def keyPressEvent(self, event):
         """キー入力を監視してデバッグログを出力"""
+        print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
         if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_P:
             self.print_window_geometry()  # Ctrl+Pが押された場合の処理
             print("Debug: Ctrl+P detected.")
-        else:
-            print(f"Debug: Key pressed - Text: {event.text()}, KeyCode: {event.key()}")
         super().keyPressEvent(event)
 
     def get_window_geometry(self):
