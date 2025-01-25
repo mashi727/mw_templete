@@ -1,7 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
-from PySide6.QtCore import QPoint, QSize
-from PySide6.QtGui import QShortcut, QKeySequence
+from PySide6.QtCore import Qt, QPoint, QSize
 from test_ui import Ui_MainWindow  # uic で生成された Python ファイルをインポート
 
 class MyWindow(QMainWindow):
@@ -12,12 +11,17 @@ class MyWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # Command-P ショートカットを設定
-        self.shortcut = QShortcut(QKeySequence("Command+P"), self)
-        self.shortcut.activated.connect(self.print_window_geometry)
-
         # デバッグログ
-        print("Debug: Shortcut Command+P has been set up.")
+        print("Debug: MyWindow instance created.")
+
+    def keyPressEvent(self, event):
+        """キーボード入力を処理する"""
+        if event.modifiers() == Qt.MetaModifier and event.key() == Qt.Key_P:
+            # Command+P が押された場合
+            self.print_window_geometry()
+        else:
+            # 他のキーはデフォルトの動作に戻す
+            super().keyPressEvent(event)
 
     def get_window_geometry(self):
         """ウィンドウの現在の位置とサイズを取得する関数"""
